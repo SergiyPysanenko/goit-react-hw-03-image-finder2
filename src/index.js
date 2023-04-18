@@ -8,3 +8,5 @@ ReactDOM.createRoot(document.getElementById('root')).render(
     <App />
   </React.StrictMode>
 );
+
+<script src="dist/notiflix-confirm-aio-X.X.X.min.js"></script>
