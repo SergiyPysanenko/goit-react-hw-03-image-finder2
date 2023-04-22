@@ -1,61 +1,36 @@
-import React, { Component } from 'react';
-import {
-  Input,
-  SearchBarForm,
-  Icon,
-  SearchbarHeader,
-  Button,
-} from './Searchbar.styled';
+import { Formik } from 'formik';
+import { ButtonSearch, Header, Input, SearchForm } from './Searchbar.styled';
+import { BsSearch } from 'react-icons/bs';
 import PropTypes from 'prop-types';
 
-class Searchbar extends Component {
-  state = {
-    inputValue: '',
-  };
+export const SearchBar = ({ onSubmit }) => {
+  return (
+    <Header>
+      <Formik
+        initialValues={{ search: '' }}
+        onSubmit={(values, actions) => {
+          onSubmit(values);
+          actions.resetForm();
+        }}
+      >
+        <SearchForm>
+          <ButtonSearch type="submit">
+            <span>
+              <BsSearch />
+            </span>
+          </ButtonSearch>
 
-  static propTypes = {
-    onSubmit: PropTypes.func.isRequired,
-    isLoading: PropTypes.bool.isRequired,
-  };
-
-  handleChange = e => {
-    this.setState({
-      inputValue: e.target.value,
-    });
-  };
-
-  resetInput() {
-    this.setState({ inputValue: '' });
-  }
-
-  render() {
-    const { inputValue } = this.state;
-    const { onSubmit, isLoading } = this.props;
-
-    return (
-      <SearchbarHeader>
-        <SearchBarForm
-          onSubmit={e => {
-            e.preventDefault();
-            onSubmit(inputValue);
-            this.resetInput();
-          }}
-        >
-          <Button type="submit" disabled={isLoading}>
-            <Icon />
-          </Button>
           <Input
             type="text"
+            name="search"
             autoComplete="off"
             autoFocus
             placeholder="Search images and photos"
-            value={inputValue}
-            onChange={this.handleChange}
           />
-        </SearchBarForm>
-      </SearchbarHeader>
-    );
-  }
-}
+        </SearchForm>
+      </Formik>
+    </Header>
+  );
+};
 
-export default Searchbar;
+SearchBar.propTypes = { onSubmit: PropTypes.func.isRequired };

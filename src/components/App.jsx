@@ -1,115 +1,79 @@
+import { Button } from 'components/Button/Button';
+import { ImageGallery } from './ImageGallery/ImageGallery';
+import { SearchBar } from './Searchbar/Searchbar';
+import { getImages } from './Servises/Api';
+import { AppBox } from './App.styled';
 import { Component } from 'react';
-import Notiflix from 'notiflix';
 
-import { Container } from './App.styled';
-import { getImagesAPI } from './Servises/Api';
-
-import Searchbar from './Searchbar/Searchbar';
-import ImageGallery from './ImageGallery/ImageGallery';
-import Button from './Button/Button';
-import Loader from './Loader/Loader';
-import Modal from './Modal/Modal';
+import toast, { Toaster } from 'react-hot-toast';
+import { PuffLoader } from 'components/Loader/Loader';
 
 export class App extends Component {
   state = {
-    page: 1,
     query: '',
-    items: [],
-    currentLargeImageURL: '',
-    error: null,
-    isLoading: false,
+    images: [],
+    page: 1,
+    loader: false,
+    showBtn: false,
+    scroll: null,
   };
 
-  onOpenModalWithLargeImage = url => {
-    this.setState({
-      currentLargeImageURL: url,
-    });
-  };
-
-  onModalClose = () => {
-    this.setState({
-      currentLargeImageURL: '',
-    });
-  };
-
-  onFormSubmit = query => {
-    if (query.trim().length === 0) {
-      Notiflix.Report.info('', 'Please, enter request', 'Ok');
-      return;
-    }
-
-    this.setState({
-      query,
-      page: 1,
-      items: [],
-    });
-  };
-
-  onLoadMoreButton = () => {
-    this.setState(prevState => ({
-      page: prevState.page + 1,
-    }));
-  };
-
-  addImages = async (query, page) => {
-    try {
-      this.setState({
-        isLoading: true,
-      });
-      const images = await getImagesAPI(query, page);
-
-      this.setState(prevState => ({
-        items: [...prevState.items, ...images],
-        isLoading: false,
-      }));
-      if (images.length === 0) {
-        Notiflix.Report.failure(
-          '',
-          "Sorry, we can't find anyting for your request. Please, enter another request",
-          'OK'
-        );
-      }
-    } catch (error) {
-      this.setState({
-        error: error.message,
-      });
-    } finally {
-      this.setState({
-        isLoading: false,
-      });
-    }
-  };
-
-  componentDidUpdate(_, prevState) {
+  async componentDidUpdate(_, { page, query }) {
     if (
-      prevState.page !== this.state.page ||
-      prevState.query !== this.state.query
+      (page !== this.state.page || query !== this.state.query) &&
+      this.state.query.trim()
     ) {
-      this.addImages(this.state.query, this.state.page);
+      try {
+        this.setState({ loader: !this.state.loader });
+        await getImages(this.state.query, this.state.page).then(resp => {
+          if (resp.hits.length) {
+            this.setState(prevState => {
+              return {
+                images: [...prevState.images, ...resp.hits],
+                showBtn: this.state.page < Math.ceil(resp.totalHits / 12),
+              };
+            });
+          } else {
+            toast.error('Enter a more meaningful search term');
+          }
+        });
+      } catch (error) {
+        console.log(error);
+        toast.error("We're in trouble, sorry");
+      } finally {
+        this.setState({ loader: !this.state.loader });
+      }
     }
   }
 
-  render() {
-    const { items, currentLargeImageURL, isLoading, error } = this.state;
+  onGetRequest = ({ search }) => {
+    if (search.trim()) {
+      this.setState({
+        images: [],
+        page: 1,
+        query: search,
+      });
+    } else {
+      toast.error('Please enter any query');
+    }
+  };
 
+  nextPage = () => {
+    this.setState(pervState => {
+      return { page: pervState.page + 1 };
+    });
+  };
+
+  render() {
+    const { images, showBtn, loader } = this.state;
     return (
-      <Container>
-        <Searchbar onSubmit={this.onFormSubmit} isLoading={isLoading} />
-        {error && <p>{error}</p>}
-        {items.length > 0 && (
-          <ImageGallery
-            items={items}
-            onClick={this.onOpenModalWithLargeImage}
-          />
-        )}
-        {isLoading && <Loader />}
-        {items.length > 0 && (
-          <Button onLoadMore={this.onLoadMoreButton} isLoading={isLoading} />
-        )}
-        {currentLargeImageURL && (
-          <Modal onClose={this.onModalClose} url={currentLargeImageURL} />
-        )}
-      </Container>
+      <AppBox>
+        <Toaster position="top-right" />
+        <SearchBar onSubmit={this.onGetRequest} />
+        <ImageGallery images={images} />
+        {showBtn && <Button nextPage={this.nextPage} />}
+        {loader && <PuffLoader />}
+      </AppBox>
     );
   }
 }

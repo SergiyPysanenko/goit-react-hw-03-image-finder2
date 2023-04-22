@@ -1,12 +1,21 @@
-import { LoaderContainer } from './Loader.styled';
-import { TailSpin } from 'react-loader-spinner';
+import { Puff } from 'react-loader-spinner';
 
-const Loader = () => {
+export const PuffLoader = () => {
   return (
-    <LoaderContainer>
-      <TailSpin color="#3f51b5" height={150} width={150} ariaLabel="loading" />
-    </LoaderContainer>
+    <Puff
+      height="100"
+      width="100"
+      radius={1}
+      color="#3f51b5"
+      ariaLabel="puff-loading"
+      wrapperStyle={{
+        position: 'fixed',
+        top: '50%',
+        left: '50%',
+        transform: `translate(-50%, -50%)`,
+      }}
+      wrapperClass=""
+      visible={true}
+    />
   );
 };
-
-export default Loader;

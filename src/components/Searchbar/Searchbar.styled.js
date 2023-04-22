@@ -1,7 +1,7 @@
-import styled from 'styled-components';
-import { MdImageSearch } from 'react-icons/md';
+import styled from '@emotion/styled';
+import { Field, Form } from 'formik';
 
-export const SearchbarHeader = styled.header`
+export const Header = styled.header`
   top: 0;
   left: 0;
   position: sticky;
@@ -20,7 +20,7 @@ export const SearchbarHeader = styled.header`
     0px 4px 5px 0px rgba(0, 0, 0, 0.14), 0px 1px 10px 0px rgba(0, 0, 0, 0.12);
 `;
 
-export const SearchBarForm = styled.form`
+export const SearchForm = styled(Form)`
   display: flex;
   align-items: center;
   width: 100%;
@@ -30,21 +30,24 @@ export const SearchBarForm = styled.form`
   overflow: hidden;
 `;
 
-export const Button = styled.button`
+export const ButtonSearch = styled.button`
   display: inline-block;
   width: 48px;
   height: 48px;
   border: 0;
+  background-size: 40%;
+  background-repeat: no-repeat;
+  background-position: center;
   opacity: 0.6;
   transition: opacity 250ms cubic-bezier(0.4, 0, 0.2, 1);
   cursor: pointer;
   outline: none;
-  :hover {
+  &:hover {
     opacity: 1;
   }
 `;
 
-export const Input = styled.input`
+export const Input = styled(Field)`
   display: inline-block;
   width: 100%;
   font: inherit;
@@ -53,10 +56,8 @@ export const Input = styled.input`
   outline: none;
   padding-left: 4px;
   padding-right: 4px;
-`;
-
-export const Icon = styled(MdImageSearch)`
-  width: 22px;
-  height: 22px;
-  fill: #24292f;
+  &::placeholder {
+    font: inherit;
+    font-size: 18px;
+  }
 `;
