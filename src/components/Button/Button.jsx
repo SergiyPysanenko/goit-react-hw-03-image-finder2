@@ -1,9 +1,11 @@
-import { LoadeMoreBtn } from './Button.styled';
+import { Loadmore } from './Button.styled';
 
-export const Button = ({ nextPage }) => {
+const LoadMoreButton = ({ nextPage }) => {
   return (
-    <LoadeMoreBtn type="button" onClick={nextPage}>
-      Loade more
-    </LoadeMoreBtn>
+    <Loadmore type="button" onClick={nextPage}>
+      Load More
+    </Loadmore>
   );
 };
+
+export default LoadMoreButton;

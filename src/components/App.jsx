@@ -1,79 +1,36 @@
-import { Button } from 'components/Button/Button';
-import { ImageGallery } from './ImageGallery/ImageGallery';
-import { SearchBar } from './Searchbar/Searchbar';
-import { getImages } from './Servises/Api';
-import { AppBox } from './App.styled';
-import { Component } from 'react';
+import React, { Component } from 'react';
+import { ToastContainer } from 'react-toastify';
 
-import toast, { Toaster } from 'react-hot-toast';
-import { PuffLoader } from 'components/Loader/Loader';
+import Searchbar from './Searchbar/Searchbar';
+import ImageGallery from './ImageGallery/ImageGallery';
 
-export class App extends Component {
+// import { AppStyle } from "./App/App.styled";
+
+class App extends Component {
   state = {
-    query: '',
-    images: [],
-    page: 1,
-    loader: false,
-    showBtn: false,
-    scroll: null,
+    searchQuery: '',
   };
 
-  async componentDidUpdate(_, { page, query }) {
-    if (
-      (page !== this.state.page || query !== this.state.query) &&
-      this.state.query.trim()
-    ) {
-      try {
-        this.setState({ loader: !this.state.loader });
-        await getImages(this.state.query, this.state.page).then(resp => {
-          if (resp.hits.length) {
-            this.setState(prevState => {
-              return {
-                images: [...prevState.images, ...resp.hits],
-                showBtn: this.state.page < Math.ceil(resp.totalHits / 12),
-              };
-            });
-          } else {
-            toast.error('Enter a more meaningful search term');
-          }
-        });
-      } catch (error) {
-        console.log(error);
-        toast.error("We're in trouble, sorry");
-      } finally {
-        this.setState({ loader: !this.state.loader });
-      }
-    }
-  }
-
-  onGetRequest = ({ search }) => {
-    if (search.trim()) {
-      this.setState({
-        images: [],
-        page: 1,
-        query: search,
-      });
-    } else {
-      toast.error('Please enter any query');
-    }
+  handleFormSubmit = async userSearch => {
+    this.setState({ searchQuery: userSearch });
   };
 
   nextPage = () => {
     this.setState(pervState => {
-      return { page: pervState.page + 1 };
+      return {  };
     });
   };
 
+
   render() {
-    const { images, showBtn, loader } = this.state;
     return (
-      <AppBox>
-        <Toaster position="top-right" />
-        <SearchBar onSubmit={this.onGetRequest} />
-        <ImageGallery images={images} />
-        {showBtn && <Button nextPage={this.nextPage} />}
-        {loader && <PuffLoader />}
-      </AppBox>
+      <>
+        <ToastContainer />
+        <Searchbar onSubmit={this.handleFormSubmit} />
+        <ImageGallery searchQuery={this.state.searchQuery} />
+      </>
     );
   }
 }
+
+export default App;

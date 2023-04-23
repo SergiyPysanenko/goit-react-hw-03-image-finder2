@@ -1,4 +1,5 @@
-import styled from '@emotion/styled';
+import styled from "@emotion/styled";
+
 
 export const ImageList = styled.ul`
   display: grid;
@@ -11,4 +12,4 @@ export const ImageList = styled.ul`
   list-style: none;
   margin-left: auto;
   margin-right: auto;
-`;
+`
