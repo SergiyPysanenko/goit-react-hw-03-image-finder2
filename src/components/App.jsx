@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-// import { animateScroll } from 'react-scroll';
 import { fetchImages } from './Servises/Api';
 import Searchbar from './Searchbar/Searchbar';
 import ImageGallery from './ImageGallery/ImageGallery';
@@ -58,16 +57,7 @@ class App extends Component {
 
   onloadMore = () => {
     this.setState(prevState => ({ page: prevState.page + 1 }));
-    // this.scrollOnMoreButton();
   };
-
-  // scrollOnMoreButton = () => {
-  //   animateScroll.scrollToBottom({
-  //     duration: 1000,
-  //     delay: 10,
-  //     smooth: 'linear',
-  //   });
-  // };
 
   openModal = largeImageURL => {
     this.setState({
