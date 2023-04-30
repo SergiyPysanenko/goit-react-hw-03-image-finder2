@@ -1,21 +1,14 @@
-import { Puff } from 'react-loader-spinner';
+import { BeatLoader } from "react-spinners";
+import css from "./Loader.module.css";
 
-export const PuffLoader = () => {
+function Loader() {
   return (
-    <Puff
-      height="100"
-      width="100"
-      radius={1}
-      color="#3f51b5"
-      ariaLabel="puff-loading"
-      wrapperStyle={{
-        position: 'fixed',
-        top: '50%',
-        left: '50%',
-        transform: `translate(-50%, -50%)`,
-      }}
-      wrapperClass=""
-      visible={true}
-    />
+    <div className={css.container}>
+      <BeatLoader className={css.element}/>
+    </div>
   );
-};
+}
+
+export default Loader;
+
+

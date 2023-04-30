@@ -1,17 +1,19 @@
-import { ImageItem, Image } from "./ImageGalleryItem.styled";
+import PropTypes from 'prop-types';
+import css from './ImageGalleryItem.module.css';
 
-export const ImageGalleryItem = ({ image, onImageClick }) => {
-  const { largeImageURL, webformatURL, tags } = image;
-
+const ImageGalleryItem = ({ src, alt, largeImageURL, openModal }) => {
   return (
-    <ImageItem
-      onClick={event => {
-        event.preventDefault();
-        onImageClick({ largeImageURL, tags });
-      }}
-    >
-      <Image src={webformatURL} alt={tags} loading="lazy" />
-    </ImageItem>
-  )
+    <li className={css.item} onClick={() => openModal(largeImageURL)}>
+      <img src={src} alt={alt} className={css.itemImage } />
+    </li>
+  );
+};
 
-}
+ImageGalleryItem.propTypes = {
+  src: PropTypes.string.isRequired,
+  alt: PropTypes.string.isRequired,
+  largeImageURL: PropTypes.string.isRequired,
+  openModal: PropTypes.func.isRequired,
+};
+
+export default ImageGalleryItem;

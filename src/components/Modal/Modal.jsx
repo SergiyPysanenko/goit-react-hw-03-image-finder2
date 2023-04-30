@@ -1,7 +1,8 @@
-import { Component } from 'react';
-import { Overlay, Modals } from './Modal.styled';
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import css from './Modal.module.css';
 
-export default class Modal extends Component {
+class Modal extends Component {
   componentDidMount() {
     window.addEventListener('keydown', this.handleKeyDown);
   }
@@ -12,24 +13,31 @@ export default class Modal extends Component {
 
   handleKeyDown = e => {
     if (e.code === 'Escape') {
-      this.props.closeModal();
+      this.props.onClose();
     }
   };
 
-  handleBackdropClick = e => {
+  handleBackDropClick = e => {
     if (e.currentTarget === e.target) {
-      this.props.closeModal();
+      this.props.onClose();
     }
   };
 
   render() {
-    const { largeImageURL, tags } = this.props.modalData;
+    const { largeImageURL } = this.props;
     return (
-      <Overlay onClick={this.handleBackdropClick}>
-        <Modals>
-          <img src={largeImageURL} alt={tags} />
-        </Modals>
-      </Overlay>
+      <div className={css.overlay} onClick={this.handleBackDropClick}>
+        <div className={css.modal}>
+          <img src={largeImageURL} alt="" />
+        </div>
+      </div>
     );
   }
 }
+
+Modal.propTypes = {
+  onClose: PropTypes.func.isRequired,
+  largeImageUrl: PropTypes.string.isRequired,
+};
+
+export default Modal;
